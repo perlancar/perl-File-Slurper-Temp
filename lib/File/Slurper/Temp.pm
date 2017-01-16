@@ -30,6 +30,15 @@ sub write_binary {
 1;
 # ABSTRACT: File::Slurper + File::Temp
 
+=head1 SYNOPSIS
+
+Use like you would use L<File::Slurper>'s C<write_text> or C<write_binary>:
+
+ use File::Slurper::Temp qw(write_text write_binary);
+ write_text("/tmp/foo.txt", "some text");
+ write_binary("/tmp/bar", $somedata);
+
+
 =head1 DESCRIPTION
 
 This module is a simple combination of L<File::Slurper> and L<File::Temp>. It
