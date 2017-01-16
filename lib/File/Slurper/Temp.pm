@@ -16,7 +16,7 @@ our @EXPORT_OK = qw(write_text write_binary);
 sub write_text {
     my $filename = shift;
 
-    my ($tempname, $tempfh) = File::Temp::tempfile();
+    my ($tempfh, $tempname) = File::Temp::tempfile();
     File::Slurper::write_text($tempname, @_);
     rename $tempname, $filename
         or croak "Couldn't rename $tempname to $filename: $!";
