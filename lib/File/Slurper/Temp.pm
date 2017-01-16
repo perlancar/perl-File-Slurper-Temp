@@ -17,7 +17,7 @@ sub write_text {
     my $filename = shift;
 
     my ($tempname, $tempfh) = File::Temp::tempfile();
-    File::Slurper::write($tempname, @_);
+    File::Slurper::write_text($tempname, @_);
     rename $tempname, $filename
         or croak "Couldn't rename $tempname to $filename: $!";
     return;
@@ -36,7 +36,8 @@ This module is a simple combination of L<File::Slurper> and L<File::Temp>. It
 provides C<write_text> and C<write_binary>. The functions are the same as their
 original in File::Slurper but they will first write to a temporary file created
 by L<File::Temp>'s C<tempfile>, then rename the temporary file to the originally
-specified name. This can avoid symlink attack.
+specified name. If the filename is originally a symlink, it will be replaced
+with a regular file. This can avoid symlink attack.
 
 the L<File::RsyBak> distribution because it has fewer dependencies.
 
