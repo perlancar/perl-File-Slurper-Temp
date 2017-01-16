@@ -48,8 +48,6 @@ by L<File::Temp>'s C<tempfile>, then rename the temporary file to the originally
 specified name. If the filename is originally a symlink, it will be replaced
 with a regular file. This can avoid symlink attack.
 
-the L<File::RsyBak> distribution because it has fewer dependencies.
-
 
 =head1 FUNCTIONS
 
