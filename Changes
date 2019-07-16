@@ -1,3 +1,13 @@
+0.005   2019-07-16  Released-By: PERLANCAR; Urgency: medium
+
+	- By default now creates temporary file in the same directory as
+	  target filename, to avoid rename() failing with cross-device link
+	  error when temporary directory is on a different filesystem than
+	  the current one [GH #1].
+
+        - [doc] Expand documentation.
+
+
 0.004   2019-01-14  Released-By: PERLANCAR
 
 	- Add functions: write_{text,binary}_to_tempfile.
