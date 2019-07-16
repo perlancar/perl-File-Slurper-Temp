@@ -60,25 +60,50 @@ Use C<write_text_to_tempfile> and C<write_binary_to_tempfile>:
 =head1 DESCRIPTION
 
 This module is a simple combination of L<File::Slurper> and L<File::Temp>. It
-provides C<write_text> and C<write_binary>. The functions are the same as their
-original in File::Slurper but they will first write to a temporary file created
-by L<File::Temp>'s C<tempfile>, then rename the temporary file to the originally
-specified name. If the filename is originally a symlink, it will be replaced
-with a regular file. This can avoid symlink attack.
+provides L</write_text> and L</write_binary> (as well as a couple of functions
+of its own). The two functions are the same as their original in File::Slurper
+but they will first write to a temporary file created by L<File::Temp>'s
+C<tempfile>, then C<rename()> the temporary file to the originally specified
+name. If the filename is originally a symlink, it will be replaced with a
+regular file by C<rename()>. This can avoid symlink attack.
 
-In addition to that, this module also provides C<write_text_to_tempfile> and
-C<write_binary_to_tempfile>. You don't have to specify filename but just content
+In addition to that, this module also provides L/<write_text_to_tempfile> and
+L<write_binary_to_tempfile>. You don't have to specify filename but just content
 to write and the functions will return the temporay filename created.
 
 =head1 FUNCTIONS
 
 =head2 write_text
 
+Usage:
+
+ write_text($filename, $content [ , $encoding, $crlf ])
+
+Just like the original L<File::Slurper>'s version, except will write to
+temporary file created by L<File::Temp>'s C<tempfile> first, then rename the
+temporary file using C<rename()>. The function will croak if C<rename()> fails.
+
 =head2 write_binary
+
+Usage:
+
+ write_binary($filename, $content)
+
+Just like the original L<File::Slurper>'s version, except will write to
+temporary file created by L<File::Temp>'s C<tempfile> first, then rename the
+temporary file using C<rename()>. The function will croak if C<rename()> fails.
 
 =head2 write_text_to_tempfile
 
+Usage:
+
+ $tempname = write_text_to_tempfile($content [ , $encoding, $crlf ])
+
 =head2 write_binary_to_tempfile
+
+Usage:
+
+ $tempname = write_binary_to_tempfile($content)
 
 
 =head1 SEE ALSO
