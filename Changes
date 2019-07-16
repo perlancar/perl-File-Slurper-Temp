@@ -1,14 +1,14 @@
-0.004   2019-01-14 (PERLANCAR)
+0.004   2019-01-14  Released-By: PERLANCAR
 
 	- Add functions: write_{text,binary}_to_tempfile.
 
 
-0.003   2017-01-16 (PERLANCAR)
+0.003   2017-01-16  Released-By: PERLANCAR
 
 	- [Bugfix] Derp, confused arguments for tempfile().
 
 
-0.002   2017-01-16 (PERLANCAR)
+0.002   2017-01-16  Released-By: PERLANCAR
 
 	- UPDATE: broken release, don't use.
 
@@ -17,7 +17,7 @@
 	- [doc] Forgot to add Synopsis.
 
 
-0.001   2017-01-16 (PERLANCAR)
+0.001   2017-01-16  Released-By: PERLANCAR
 
 	- UPDATE: broken release, don't use.
 
