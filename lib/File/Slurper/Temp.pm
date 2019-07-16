@@ -16,13 +16,31 @@ our @EXPORT_OK = qw(
                        write_text_to_tempfile write_binary_to_tempfile
                );
 
+our $FILE_TEMP_TEMPLATE = "XXXXXXXXXX";
+our $FILE_TEMP_DIR;
+
+sub _tempfile {
+    my $target_filename = shift;
+
+    my @tfargs;
+    push @tfargs, $FILE_TEMP_TEMPLATE;
+    my $dir = $FILE_TEMP_DIR;
+    unless (defined $dir) {
+        require File::Spec;
+        (undef, $dir, undef) = File::Spec->splitpath($target_filename);
+    }
+    push @tfargs, DIR => $dir;
+    File::Temp::tempfile(@tfargs);
+}
+
 sub write_text {
     my $filename = shift;
 
-    my ($tempfh, $tempname) = File::Temp::tempfile();
+    my ($tempfh, $tempname) = _tempfile($filename);
     File::Slurper::write_text($tempname, @_);
     rename $tempname, $filename
         or croak "Couldn't rename $tempname to $filename: $!";
+
     return;
 }
 
@@ -83,21 +101,25 @@ Just like the original L<File::Slurper>'s version, except will write to
 temporary file created by L<File::Temp>'s C<tempfile> first, then rename the
 temporary file using C<rename()>. The function will croak if C<rename()> fails.
 
+To make sure that C<rename()> doesn't fail when the default temporary directory
+(e.g. C</tmp>) is on a different filesystem (because C<rename()> does not work
+across filesystem boundary), the temporary file is created with option C<< DIR
+=> dirname($filename) >> . If you want to set a specific temporary directory,
+set C<$FILE_TEMP_DIR> (see source code).
+
 =head2 write_binary
 
 Usage:
 
  write_binary($filename, $content)
 
-Just like the original L<File::Slurper>'s version, except will write to
-temporary file created by L<File::Temp>'s C<tempfile> first, then rename the
-temporary file using C<rename()>. The function will croak if C<rename()> fails.
-
 =head2 write_text_to_tempfile
 
 Usage:
 
  $tempname = write_text_to_tempfile($content [ , $encoding, $crlf ])
+
+Temporary file is created with default option (C<File::Temp::tempfile()>).
 
 =head2 write_binary_to_tempfile
 
