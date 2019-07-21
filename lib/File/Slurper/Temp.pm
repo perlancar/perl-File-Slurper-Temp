@@ -112,6 +112,8 @@ using C<tempfile()>'s option C<< DIR => dirname($filename) >>. If you want to
 set a specific temporary directory, set C<$FILE_TEMP_DIR> (see source code). But
 keep in mind that C<rename()> doesn't work cross-device.
 
+=head2 write_binary
+
 Usage:
 
  write_binary($filename, $content)
