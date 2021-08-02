@@ -1,6 +1,8 @@
 package File::Slurper::Temp;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 use strict;
@@ -26,8 +28,8 @@ sub _tempfile {
     push @tfargs, $FILE_TEMP_TEMPLATE;
     my $dir = $FILE_TEMP_DIR;
     unless (defined $dir) {
-        require File::Spec;
-        (undef, $dir, undef) = File::Spec->splitpath($target_filename);
+        require File::Basename;
+        $dir = File::Basename::dirname($target_filename);
     }
     push @tfargs, DIR => $dir;
     File::Temp::tempfile(@tfargs);
