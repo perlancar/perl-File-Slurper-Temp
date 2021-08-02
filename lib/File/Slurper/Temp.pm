@@ -8,7 +8,7 @@ package File::Slurper::Temp;
 use strict;
 use warnings;
 
-use Carp 'croak';
+use Carp 'croak', 'carp';
 use File::Slurper ();
 use File::Temp ();
 
@@ -18,20 +18,32 @@ our @EXPORT_OK = qw(
                        write_text_to_tempfile write_binary_to_tempfile
                );
 
-our $FILE_TEMP_TEMPLATE = "XXXXXXXXXX";
 our $FILE_TEMP_DIR;
+our $FILE_TEMP_PERMS;
+our $FILE_TEMP_TEMPLATE = "XXXXXXXXXX";
 
 sub _tempfile {
     my $target_filename = shift;
 
     my @tfargs;
+
     push @tfargs, $FILE_TEMP_TEMPLATE;
+
     my $dir = $FILE_TEMP_DIR;
     unless (defined $dir) {
         require File::Basename;
         $dir = File::Basename::dirname($target_filename);
     }
     push @tfargs, DIR => $dir;
+
+    my $perms = $FILE_TEMP_PERMS;
+    unless (defined $perms) {
+        my @st = lstat($target_filename)
+        ;#    or carp "Couldn't lstat($target_filename): $!";
+        $perms = $st[2] if @st;
+    }
+    push @tfargs, PERMS => $perms if $perms;
+
     File::Temp::tempfile(@tfargs);
 }
 
@@ -111,8 +123,16 @@ fails.
 
 By default, the temporary file is created in the same directory as C<$filename>,
 using C<tempfile()>'s option C<< DIR => dirname($filename) >>. If you want to
-set a specific temporary directory, set C<$FILE_TEMP_DIR> (see source code). But
+set a specific temporary directory, set L</"$FILE_TEMP_DIR">. But
 keep in mind that C<rename()> doesn't work cross-device.
+
+By default, if the target file exists, the temporary file is also created with
+the same permission as the target file. Otherwise, permission is default as per
+File::Temp's default (0600). If you want to set a specific permission, set
+L</"$FILE_TEMP_PERMS">.
+
+By default, file ownership is not changed/set. If you run this script as root,
+you might be creating files owned by root. There's no option yet to set this.
 
 =head2 write_binary
 
@@ -133,6 +153,15 @@ Temporary file is created with default option (C<File::Temp::tempfile()>).
 Usage:
 
  $tempname = write_binary_to_tempfile($content)
+
+
+=head1 VARIABLES
+
+=head2 $FILE_PERM_DIR
+
+=head2 $FILE_PERM_PERMS
+
+=head2 $FILE_PERM_TEMPLATE
 
 
 =head1 SEE ALSO

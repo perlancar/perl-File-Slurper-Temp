@@ -25,7 +25,23 @@ subtest "write_text" => sub {
     subtest "basics" => sub {
         lives_ok { write_text "$tempdir/1", "foo" };
         is(read_text("$tempdir/1"), "foo");
+
+        # modify an existing file with permission 0644
+        my @st;
+
+        chmod 0660, "$tempdir/1" or die;
+        write_text "$tempdir/1", "foo2";
+        @st = stat "$tempdir/1" or die;
+        is($st[2] & 0777, 0660);
+
+        chmod 0644, "$tempdir/1" or die;
+        write_text "$tempdir/1", "foo3";
+        @st = stat "$tempdir/1" or die;
+        is($st[2] & 0777, 0644);
     };
+
+    # TODO: test setting $FILE_TEMP_TEMPLATE
+
     subtest "Setting \$FILE_TEMP_DIR" => sub {
         lives_ok {
             local $File::Slurper::Temp::FILE_TEMP_DIR = "$tempdir/dir1";
@@ -35,6 +51,24 @@ subtest "write_text" => sub {
         dies_ok {
             local $File::Slurper::Temp::FILE_TEMP_DIR = "$tempdir/non-existent";
             write_text "$tempdir/3", "baz";
+        };
+    };
+
+    subtest "Setting \$FILE_TEMP_PERMS" => sub {
+        lives_ok {
+            my @st;
+
+            local $File::Slurper::Temp::FILE_TEMP_PERMS = 0600;
+            write_text "$tempdir/1", "foo4";
+            is(read_text("$tempdir/1"), "foo4");
+            @st = stat "$tempdir/1" or die;
+            is($st[2] & 0777, 0600);
+
+            $File::Slurper::Temp::FILE_TEMP_PERMS = 0604;
+            write_text "$tempdir/1", "foo5";
+            is(read_text("$tempdir/1"), "foo5");
+            @st = stat "$tempdir/1" or die;
+            is($st[2] & 0777, 0604);
         };
     };
 };
