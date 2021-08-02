@@ -19,11 +19,23 @@ use File::Temp qw(tempdir);
 my $tempdir = tempdir(CLEANUP => !$ENV{DEBUG});
 note "Temporary directory for testing: $tempdir (not cleaned up)"
     if $ENV{DEBUG};
+mkdir "$tempdir/dir1";
 
 subtest "write_text" => sub {
     subtest "basics" => sub {
         lives_ok { write_text "$tempdir/1", "foo" };
         is(read_text("$tempdir/1"), "foo");
+    };
+    subtest "Setting \$FILE_TEMP_DIR" => sub {
+        lives_ok {
+            local $File::Slurper::Temp::FILE_TEMP_DIR = "$tempdir/dir1";
+            write_text "$tempdir/2", "bar";
+            is(read_text("$tempdir/2"), "bar");
+        };
+        dies_ok {
+            local $File::Slurper::Temp::FILE_TEMP_DIR = "$tempdir/non-existent";
+            write_text "$tempdir/3", "baz";
+        };
     };
 };
 
