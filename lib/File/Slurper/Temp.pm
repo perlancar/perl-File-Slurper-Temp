@@ -16,6 +16,7 @@ use Exporter qw(import);
 our @EXPORT_OK = qw(
                        write_text write_binary
                        write_text_to_tempfile write_binary_to_tempfile
+                       modify_text modify_binary
                );
 
 our $FILE_TEMP_DIR;
@@ -72,6 +73,27 @@ sub write_binary_to_tempfile {
     return write_text_to_tempfile($_[0], 'latin-1');
 }
 
+# BEGIN copied from File::Slurper::Shortcuts, with some mods
+sub modify_text {
+    my ($filename, $code, $encoding, $crlf) = @_;
+
+    local $_ = File::Slurper::read_text($filename, $encoding, $crlf);
+    my $orig = $_;
+
+    my $res = $code->($_);
+    croak "replace_text(): Code does not return true" unless $res;
+
+    return if $orig eq $_;
+
+    write_text($filename, $_, $encoding, $crlf);
+    $orig;
+}
+
+sub modify_binary {
+    return modify_text(@_[0,1], 'latin-1');
+}
+# END copied from File::Slurper::Shortcuts, with some mods
+
 1;
 # ABSTRACT: File::Slurper + File::Temp
 
@@ -88,6 +110,13 @@ Use C<write_text_to_tempfile> and C<write_binary_to_tempfile>:
  use File::Slurper::Temp qw(write_text_to_tempfile write_binary_to_tempfile);
  my $filename1 = write_text_to_tempfile("some text");
  my $filename2 = write_binary_to_tempfile($somedata);
+
+This module also provides L</modify_text> and L</modify_binary>, like that
+provided by L<File::Slurper::Shortcuts>:
+
+ use File::Slurper::Temp qw(write_text_to_tempfile write_binary_to_tempfile);
+ modify_text("/path/to/file.txt", sub { s/foo/bar/g });
+ modify_binary("/path/to/file.txt", sub { s/foo/bar/g });
 
 
 =head1 DESCRIPTION
@@ -155,6 +184,21 @@ Usage:
 
  $tempname = write_binary_to_tempfile($content)
 
+=head2 modify_text
+
+Like L<File::Slurper::Shortcuts>'s C<modify_text> except it uses our version of
+L</write_text>.
+
+See File::Slurper::Shortcuts for more details.
+
+=head2 modify_binary
+
+Like L<File::Slurper::Shortcuts>'s C<modify_binary> except it uses our version
+of L</write_binary>.
+
+See File::Slurper::Shortcuts for more details.
+
+
 
 =head1 VARIABLES
 
@@ -170,3 +214,5 @@ Usage:
 L<File::Slurper>
 
 L<File::Temp>
+
+C<modify_text()> and C<modify_binary()> follows L<File::Slurper::Shortcuts>.

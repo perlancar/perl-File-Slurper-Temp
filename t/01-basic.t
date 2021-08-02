@@ -13,6 +13,8 @@ use File::Slurper::Temp qw(
                               write_binary
                               write_text_to_tempfile
                               write_binary_to_tempfile
+                              modify_text
+                              modify_binary
                       );
 use File::Temp qw(tempdir);
 
@@ -84,5 +86,14 @@ subtest "write_text_to_tempfile" => sub {
 };
 
 # XXX write_binary_to_tempfile
+
+subtest "modify_text" => sub {
+    dies_ok { modify_text("$tempdir/not-existent", sub { 1 }) } "file does not exist -> dies";
+    dies_ok { modify_text("$tempdir/1", sub { 0 }) } "code does not return true -> dies";
+    modify_text("$tempdir/1", sub { s/foo/FOO/ });
+    is(read_text("$tempdir/1"), "FOO5");
+};
+
+# XXX modify_binary
 
 done_testing;
