@@ -129,7 +129,8 @@ keep in mind that C<rename()> doesn't work cross-device.
 By default, if the target file exists, the temporary file is also created with
 the same permission as the target file. Otherwise, permission is default as per
 File::Temp's default (0600). If you want to set a specific permission, set
-L</"$FILE_TEMP_PERMS">.
+L</"$FILE_TEMP_PERMS">. Permission setting is done by File::Temp::tempfile()
+using its PERMS option.
 
 By default, file ownership is not changed/set. If you run this script as root,
 you might be creating files owned by root. There's no option yet to set this.
