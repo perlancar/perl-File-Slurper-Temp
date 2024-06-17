@@ -1,18 +1,18 @@
 package File::Slurper::Temp;
 
+use strict;
+use warnings;
+
+use Carp 'croak', 'carp';
+use Exporter qw(import);
+use File::Slurper ();
+use File::Temp ();
+
 # AUTHORITY
 # DATE
 # DIST
 # VERSION
 
-use strict;
-use warnings;
-
-use Carp 'croak', 'carp';
-use File::Slurper ();
-use File::Temp ();
-
-use Exporter qw(import);
 our @EXPORT_OK = qw(
                        write_text write_binary
                        write_text_to_tempfile write_binary_to_tempfile
