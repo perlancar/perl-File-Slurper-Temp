@@ -202,11 +202,11 @@ See File::Slurper::Shortcuts for more details.
 
 =head1 VARIABLES
 
-=head2 $FILE_PERM_DIR
+=head2 $FILE_TEMP_DIR
 
-=head2 $FILE_PERM_PERMS
+=head2 $FILE_TEMP_PERMS
 
-=head2 $FILE_PERM_TEMPLATE
+=head2 $FILE_TEMP_TEMPLATE
 
 
 =head1 SEE ALSO
