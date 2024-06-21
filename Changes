@@ -56,7 +56,7 @@
 	- [Bugfix] Derp, confused arguments for tempfile().
 
 
-0.002   2017-01-16  Released-By: PERLANCAR
+0.002   2017-01-16  Released-By: PERLANCAR; Broken: yes
 
 	- UPDATE: broken release, don't use.
 
@@ -65,7 +65,7 @@
 	- [doc] Forgot to add Synopsis.
 
 
-0.001   2017-01-16  Released-By: PERLANCAR
+0.001   2017-01-16  Released-By: PERLANCAR; Broken: yes
 
 	- UPDATE: broken release, don't use.
 
